@@ -56,10 +56,10 @@ int SymTable_put(SymTable_T oSymTable,
     point = point->next;
   }
 
-  struct Node *end = (struct Node *)malloc(sizeof(struct Node));
+  struct Node *end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
 
-  char *newKey = (char *)malloc(sizeof(pcKey));
+  char *newKey = (char *) malloc(sizeof(pcKey));
   if(newKey == NULL) return 0;
 
   strcpy(newKey, pcKey);
