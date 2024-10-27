@@ -5,7 +5,7 @@
 #include "symtable.h"
 
 struct Node {
- const char *key;
+ char *key;
  void *value;
  struct Node *next;
 };
