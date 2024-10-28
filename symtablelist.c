@@ -25,9 +25,9 @@ SymTable_T SymTable_new(void){
 }
 
 void SymTable_free(SymTable_T oSymTable){
-  struct Node *point = oSymTable->first;
-
   assert(oSymTable != NULL);
+
+  struct Node *point = oSymTable->first;
 
   while(point != NULL){
     struct Node *current = point;
@@ -35,6 +35,7 @@ void SymTable_free(SymTable_T oSymTable){
     free(current->key);
     free(current);
   }
+  free(oSymTable);
 }
 
 size_t SymTable_getLength(SymTable_T oSymTable){
@@ -44,31 +45,35 @@ size_t SymTable_getLength(SymTable_T oSymTable){
 
 int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
-
-  struct Node *point = oSymTable->first;
-  struct Node *tail;
-
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
-  while(point != NULL){
-    if(strcmp(point->key, pcKey) == 0) return 0;
-    if(point->next = NULL) tail = point;
-    point = point->next;
-  }
+  struct Node *point = oSymTable->first;
+  struct Node *end;
 
-  struct Node *end = (struct Node *) malloc(sizeof(struct Node));
+  end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
-
   char *newKey = (char *) malloc(strlen(pcKey) + 1);
-  if(newKey == NULL) return 0;
-
+  if(newKey == NULL){
+    free(end);
+    return 0;
+  }
   strcpy(newKey, pcKey);
-  /*do i free the old key?*/
   end->key = newKey;
   end->value = pvValue;
   end->next = NULL;
 
-  tail->next = end;
+
+  while(point->next != NULL){
+    if(strcmp(point->key, pcKey) == 0) return 0;
+    if(point->next == NULL){
+      point->next = end;
+      oSymTable->size += 1;
+      return 1;
+    }
+    point = point->next;
+  }
+  /*do i free the old key?*/
+  oSymTable->first = end;
   oSymTable->size += 1;
   return 1;
 }
@@ -117,31 +122,38 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
-  struct Node *point = oSymTable->first;
-  struct Node *rover = point->next;
+  struct Node *current = oSymTable->first;
 
   assert(oSymTable != NULL && pcKey != NULL);
 
-  if(strcmp(point->key, pcKey) == 0){
-    oSymTable->first = rover;
-    void *old = point->value;
-    free(point->key);
-    free(point);
-    return old;
+  if(current == NULL) return NULL;
+
+  if(strcmp(current->key, pcKey) == 0){
+    void *val = current->value;
+    struct Node *after = current->next;
+    free(current->key);
+    free(current);
+    oSymTable->first = after;
+    return val;
   }
 
-  while(rover != NULL){
-    if(strcmp(rover->key, pcKey) == 0){
-      void *old = rover->value;
-      point->next = rover->next;
-      free(rover->key);
-      free(rover);
-      return old;
+  struct Node *before = current;
+  current = current->next;
+
+  while(current != NULL){
+    if(strcmp(current->key, pcKey) == 0){
+      void *val = current->value;
+      struct Binding *after = current->next;
+      free(current->key);
+      free(current);
+      before->next = after;
+      return val;
     }
-    rover = rover->next;
-    point = point->next;
+    before = current;
+    current = current->next;
   }
   return NULL;
+
 }
 
 void SymTable_map(SymTable_T oSymTable,
@@ -150,7 +162,7 @@ void SymTable_map(SymTable_T oSymTable,
 
   struct Node *point = oSymTable->first;
 
-  assert(oSymTable != NULL && pvExtra != NULL);
+  assert(oSymTable != NULL && pvExtra != NULL && pfApply != NULL);
 
   while(point != NULL){
     (*pfApply)(point->key, point->value, pvExtra);
