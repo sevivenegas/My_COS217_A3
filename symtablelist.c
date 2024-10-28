@@ -57,7 +57,7 @@ int SymTable_put(SymTable_T oSymTable,
 
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
-  newKey = (char *) malloc(strlen(pcKey) + 1);
+  newKey = (char *) malloc(sizeof(char) * (strlen(pcKey) + 1));
   if(newKey == NULL){
     free(end);
     return 0;
@@ -68,6 +68,7 @@ int SymTable_put(SymTable_T oSymTable,
   end->value = pvValue;
   end->next = NULL;
 
+  if(point == NULL) point = end;
 
   while(point->next != NULL){
     if(strcmp(point->key, pcKey) == 0) return 0;
