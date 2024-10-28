@@ -6,7 +6,7 @@
 
 struct Node {
  char *key;
- void *value;
+ const void *value;
  struct Node *next;
 };
 
