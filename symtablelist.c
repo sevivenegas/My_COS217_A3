@@ -25,9 +25,9 @@ SymTable_T SymTable_new(void){
 }
 
 void SymTable_free(SymTable_T oSymTable){
-  assert(oSymTable != NULL);
-
   struct Node *point = oSymTable->first;
+  
+  assert(oSymTable != NULL);
 
   while(point != NULL){
     struct Node *current = point;
