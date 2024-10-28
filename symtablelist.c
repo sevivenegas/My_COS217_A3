@@ -93,7 +93,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
   while(point != NULL){
     if(strcmp(point->key, pcKey) == 0){
-      void *old = point->value;
+      const void *old = point->value;
       point->value = pvValue;
       return old;
     } 
@@ -128,14 +128,16 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
 }
 
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
-  struct Node *current = oSymTable->first;
+  struct Node *current;
+  struct Node *before;
 
   assert(oSymTable != NULL && pcKey != NULL);
+  current = oSymTable->first;
 
   if(current == NULL) return NULL;
 
   if(strcmp(current->key, pcKey) == 0){
-    void *val = current->value;
+    const void *val = current->value;
     struct Node *after = current->next;
     free(current->key);
     free(current);
@@ -143,13 +145,13 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     return val;
   }
 
-  struct Node *before = current;
+  before = current;
   current = current->next;
 
   while(current != NULL){
     if(strcmp(current->key, pcKey) == 0){
-      void *val = current->value;
-      struct Binding *after = current->next;
+      const void *val = current->value;
+      struct Node *after = current->next;
       free(current->key);
       free(current);
       before->next = after;
