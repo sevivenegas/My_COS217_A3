@@ -49,6 +49,7 @@ int SymTable_put(SymTable_T oSymTable,
 
   struct Node *point;
   struct Node *end;
+  char *newKey;
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
@@ -56,7 +57,7 @@ int SymTable_put(SymTable_T oSymTable,
 
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
-  char *newKey = (char *) malloc(strlen(pcKey) + 1);
+  newKey = (char *) malloc(strlen(pcKey) + 1);
   if(newKey == NULL){
     free(end);
     return 0;
