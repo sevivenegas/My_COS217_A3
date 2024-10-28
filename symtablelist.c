@@ -68,7 +68,7 @@ int SymTable_put(SymTable_T oSymTable,
   end->value = pvValue;
   end->next = NULL;
 
-  if(point == NULL) oSymTable->first = end;
+  if(point == NULL) point = end;
 
   while(point->next != NULL){
     if(strcmp(point->key, pcKey) == 0) return 0;
