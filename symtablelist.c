@@ -26,7 +26,7 @@ SymTable_T SymTable_new(void){
 
 void SymTable_free(SymTable_T oSymTable){
   struct Node *point = oSymTable->first;
-  
+
   assert(oSymTable != NULL);
 
   while(point != NULL){
@@ -43,12 +43,16 @@ size_t SymTable_getLength(SymTable_T oSymTable){
   return oSymTable->size;
 }
 
+/*shouldnt assert come first before declarations?*/
 int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
+
+  struct Node *point;
+  struct Node *end;
+
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
-  struct Node *point = oSymTable->first;
-  struct Node *end;
+  point = oSymTable->first;
 
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
@@ -57,6 +61,7 @@ int SymTable_put(SymTable_T oSymTable,
     free(end);
     return 0;
   }
+  
   strcpy(newKey, pcKey);
   end->key = newKey;
   end->value = pvValue;
