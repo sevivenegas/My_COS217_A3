@@ -141,11 +141,11 @@ int SymTable_put(SymTable_T oSymTable,
     oSymTable->size += 1;
     
     /*resizes symtable if there are certain number of 
-    bindings compared to number of buckets*/
+    bindings compared to number of buckets
     if(oSymTable->size > (size_t) oSymTable->bucketsNum 
     && oSymTable->bucketsNum != 65521){
       oSymTable = SymTable_resize(oSymTable);
-    }
+    }*/
 
     return 1;
 }
