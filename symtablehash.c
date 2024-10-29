@@ -214,7 +214,7 @@ void SymTable_map(SymTable_T oSymTable,
     }
   }
 
-static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
+SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
   SymTable_T newTable;
   int i;
   assert(oSymTable != NULL && size != NULL);
