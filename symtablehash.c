@@ -177,7 +177,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   size_t index;
   struct Binding *current;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
 
   index = SymTable_hash(pcKey, oSymTable->bucketsNum);
   current = oSymTable->buckets[index];
