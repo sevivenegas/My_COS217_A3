@@ -146,6 +146,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     oSymTable->first = after;
     free(current->key);
     free(current);
+    oSymTable->size -= 1;
     return val;
   }
 
@@ -159,6 +160,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
       before->next = after;
       free(current->key);
       free(current);
+      oSymTable->size -= 1;
       return val;
     }
     before = current;
