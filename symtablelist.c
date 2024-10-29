@@ -90,7 +90,7 @@ void *SymTable_replace(SymTable_T oSymTable,
   
   struct Node *point;
 
-  assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
+  assert(oSymTable != NULL && pcKey != NULL);
   point = oSymTable->first;
 
   while(point != NULL){
