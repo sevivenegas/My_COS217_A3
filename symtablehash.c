@@ -137,7 +137,6 @@ int SymTable_put(SymTable_T oSymTable,
     if(current == NULL) oSymTable->buckets[index] = end;
     /*adds end node to end of linked list*/
     else current->next = end;
-    current->next = end;
     oSymTable->size += 1;
     
     /*resizes symtable if there are certain number of 
