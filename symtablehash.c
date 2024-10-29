@@ -41,7 +41,7 @@ inclusive.*/
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
 
 /*Returns a pointer to a new SymTable which is an expanded version of 
-oSymtable*/
+oSymTable*/
 static SymTable_T SymTable_resize(SymTable_T oSymTable);
 
 SymTable_T SymTable_new(void){
@@ -103,7 +103,7 @@ int SymTable_put(SymTable_T oSymTable,
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    index = SymTable_hash(pcKey, oSymTable->bucketsNum);
+    index = SymTable_hash(pcKey, (size_t) oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
 
     if(current != NULL) {
@@ -160,7 +160,7 @@ void *SymTable_replace(SymTable_T oSymTable,
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    index = SymTable_hash(pcKey, oSymTable->bucketsNum);
+    index = SymTable_hash(pcKey, (size_t) oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
 
     while(current != NULL){
@@ -182,7 +182,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
-  index = SymTable_hash(pcKey, oSymTable->bucketsNum);
+  index = SymTable_hash(pcKey, (size_t) oSymTable->bucketsNum);
   current = oSymTable->buckets[index];
 
   while(current != NULL){
@@ -200,7 +200,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
 
-  index = SymTable_hash(pcKey, oSymTable->bucketsNum);
+  index = SymTable_hash(pcKey, (size_t) oSymTable->bucketsNum);
   current = oSymTable->buckets[index];
 
   while(current != NULL){
@@ -219,7 +219,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     assert(oSymTable != NULL);
     assert(pcKey != NULL);
 
-    index = SymTable_hash(pcKey, oSymTable->bucketsNum);
+    index = SymTable_hash(pcKey, (size_t) oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
 
     /*empty table nothing to remove*/
