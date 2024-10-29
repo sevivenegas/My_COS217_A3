@@ -114,7 +114,7 @@ void *SymTable_replace(SymTable_T oSymTable,
     if(strcmp(current->key, pcKey) == 0){
       const void *oldValue = current->value;
       current->value = pvValue;
-      return oldValue;
+      return (void *) oldValue;
     } 
     current = current->next;
   }
