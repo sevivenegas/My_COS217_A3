@@ -143,7 +143,8 @@ int SymTable_put(SymTable_T oSymTable,
     bindings compared to number of buckets*/
     if(oSymTable->size > (size_t) oSymTable->bucketsNum 
     && oSymTable->bucketsNum != 65521){
-      oSymTable = SymTable_resize(oSymTable);
+      SymTable_T temp = SymTable_resize(oSymTable);
+      if(temp != NULL) oSymTable = temp;
     }
 
     return 1;
@@ -286,7 +287,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   size = oSymTable->bucketsNum;
 
   newTable = (SymTable_T) malloc(sizeof(struct SymTable));
-  if(newTable == NULL) return oSymTable;
+  if(newTable == NULL) return NULL;
 
   /*determines size of newTable based on sizes and conditions given
   in assignments*/
@@ -299,7 +300,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   else size = 65521;
 
   newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding));
-  if(newTable->buckets == NULL) return oSymTable;
+  if(newTable->buckets == NULL) return NULL;
 
   /*re-adds all bindings from previous table into new table*/
   for(i = 0; i < oSymTable->bucketsNum; i++){
