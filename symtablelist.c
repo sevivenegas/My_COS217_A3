@@ -54,8 +54,6 @@ int SymTable_put(SymTable_T oSymTable,
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
-  current = oSymTable->first;
-
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
   newKey = (char *) malloc(sizeof(char) * (strlen(pcKey) + 1));
@@ -69,24 +67,21 @@ int SymTable_put(SymTable_T oSymTable,
   end->value = pvValue;
   end->next = NULL;
 
+  current = oSymTable->first;
+
   if(current == NULL){
     oSymTable->first = end;
     oSymTable->size += 1;
     return 1;
-  } 
-  after = current->next;
-  while(current != NULL){
-    if(strcmp(current->key, pcKey) == 0) return 0;
-    if(after == NULL){
-      after = end;
-      oSymTable->size += 1;
-      return 1;
-    }
-    current = after;
-    after = current->next;
   }
+  while(current->next != NULL){
+    current = current->next;
+    if(strcmp(current->key, pcKey) == 0) return 0;
+  }
+  current->next = end;
+  oSymTable->size += 1;
   /*do i free the old key?*/
-  return 0;
+  return 1;
 }
 
 void *SymTable_replace(SymTable_T oSymTable,
