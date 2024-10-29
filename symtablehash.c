@@ -71,7 +71,7 @@ int SymTable_put(SymTable_T oSymTable,
     char *newKey;
 
     assert(oSymTable != NULL && pcKey != NULL);
-    index = SymTable_hash(pvValue, oSymTable->bucketsNum);
+    index = SymTable_hash(pcKey, oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
 
     end = (struct Binding *) malloc(sizeof(struct Binding));
