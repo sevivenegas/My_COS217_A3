@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 
+/*Symtable_T is a pointer to a Symtable*/
 typedef struct SymTable* SymTable_T;
 
 /*SymTable_new creates and returns a new SymTable object that contains 
