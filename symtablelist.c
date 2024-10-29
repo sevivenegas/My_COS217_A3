@@ -12,7 +12,7 @@ struct Node {
 
 struct SymTable{
    struct Node *first;
-   int size;
+   size_t size;
 };
 
 SymTable_T SymTable_new(void){
@@ -48,7 +48,6 @@ int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
 
   struct Node *current;
-  struct Node *after;
   struct Node *end;
   char *newKey;
 
