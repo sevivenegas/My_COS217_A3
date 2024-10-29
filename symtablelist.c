@@ -86,7 +86,7 @@ int SymTable_put(SymTable_T oSymTable,
 
 void *SymTable_replace(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
-  return NULL; /* erase */
+  
   struct Node *point;
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
@@ -106,7 +106,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   struct Node *point;
-
+  return NULL; /* erase */
   assert(oSymTable != NULL && pcKey != NULL);
   point = oSymTable->first;
 
