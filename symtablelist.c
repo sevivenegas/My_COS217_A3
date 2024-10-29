@@ -72,6 +72,7 @@ int SymTable_put(SymTable_T oSymTable,
   assert(pcKey != NULL);
 
   current = oSymTable->first;
+
   if(current != NULL) {
     /*updates current until we are at the last node and 
     checks if there is duplicate key*/
@@ -100,7 +101,8 @@ int SymTable_put(SymTable_T oSymTable,
   end->next = NULL;
 
   /*adds end node to end of linked list*/
-  current->next = end;
+  if(current == NULL) oSymTable->first = end;
+  else current->next = end;
   oSymTable->size += 1;
   return 1;
 }
