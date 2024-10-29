@@ -75,8 +75,8 @@ int SymTable_put(SymTable_T oSymTable,
     return 1;
   }
   while(current->next != NULL){
+    if(strcmp(current->key, pcKey) == 0) return 0;
     current = current->next;
-    if(strcmp(current->key, pcKey) == 0) return 1;
   }
   current->next = end;
   oSymTable->size += 1;
