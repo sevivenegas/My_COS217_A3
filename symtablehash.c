@@ -141,10 +141,13 @@ int SymTable_put(SymTable_T oSymTable,
     
     /*resizes symtable if there are certain number of 
     bindings compared to number of buckets*/
-    if(oSymTable->size > (size_t) oSymTable->bucketsNum 
-    && oSymTable->bucketsNum != 65521){
+    if((oSymTable->size > (size_t) oSymTable->bucketsNum)
+    && (oSymTable->bucketsNum != 65521)){
       SymTable_T temp = SymTable_resize(oSymTable);
-      if(temp != NULL) oSymTable = temp;
+      if(temp != NULL){
+        SymTable_free(oSymTable);
+        oSymTable = temp;
+      }
     }
 
     return 1;
@@ -313,7 +316,6 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     }
   }
   /*completely frees all memory associated with old table*/
-  SymTable_free(oSymTable);
   return newTable;
 }
 
