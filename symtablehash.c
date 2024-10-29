@@ -83,7 +83,8 @@ void SymTable_free(SymTable_T oSymTable){
       }
     }
   }
-  /*frees all pointers*/
+  /*frees all pointers and table*/
+  free(oSymTable->buckets);
   free(oSymTable);
 }
 
@@ -300,7 +301,10 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   else size = 65521;
 
   newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding *));
-  if(newTable->buckets == NULL) return NULL;
+  if(newTable->buckets == NULL){
+    free(newTable);
+    return NULL;
+  } 
 
   /*re-adds all bindings from previous table into new table*/
   for(i = 0; i < oSymTable->bucketsNum; i++){
