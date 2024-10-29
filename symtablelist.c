@@ -200,7 +200,7 @@ void SymTable_map(SymTable_T oSymTable,
   current = oSymTable->first;
 
   while(current != NULL){
-    (*pfApply)(current->key, current->value, pvExtra);
+    (*pfApply)(current->key, (void *) current->value, (void *) pvExtra);
     current = current->next;
   }
   
