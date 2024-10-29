@@ -114,7 +114,8 @@ void *SymTable_replace(SymTable_T oSymTable,
   
   struct Node *current;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
   current = oSymTable->first;
 
   while(current != NULL){
@@ -132,7 +133,8 @@ void *SymTable_replace(SymTable_T oSymTable,
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   struct Node *current;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
   current = oSymTable->first;
 
   while(current != NULL){
@@ -145,7 +147,8 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
   struct Node *current;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
   current = oSymTable->first;
 
   while(current != NULL){
@@ -159,7 +162,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
   struct Node *current;
   struct Node *before;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
+
   current = oSymTable->first;
 
   /*empty table nothing to remove*/
@@ -208,7 +213,8 @@ void SymTable_map(SymTable_T oSymTable,
 
   struct Node *current;
 
-  assert(oSymTable != NULL && pfApply != NULL);
+  assert(oSymTable != NULL);
+  assert(pfApply != NULL);
   current = oSymTable->first;
 
   while(current != NULL){

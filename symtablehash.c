@@ -155,7 +155,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
   current = oSymTable->buckets[index];
 
   while(current != NULL){
-    if(strcmp(current->key, pcKey) == 0) return current->value;
+    if(strcmp(current->key, pcKey) == 0) return (void *) current->value;
     current = current->next;
   }
   return NULL;
@@ -188,7 +188,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 
     while(current != NULL){
       if(strcmp(current->key, pcKey) == 0){
-        void *val = current->value;
+        void *val = (void *) current->value;
         struct Binding *after = current->next;
         before->next = after;
         free(current->key);
@@ -242,7 +242,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
     struct Binding *current = oSymTable->buckets[i];
     if(current != NULL){
       while(current != NULL){
-        SymTable_put(newTable, current->key, current->value);
+        SymTable_put(newTable, (void *) current->key, (void *) current->value);
       }
     }
   }
