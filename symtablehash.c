@@ -76,7 +76,7 @@ int SymTable_put(SymTable_T oSymTable,
 
     end = (struct Binding *) malloc(sizeof(struct Binding));
     if(end == NULL) return 0;
-    newKey = malloc(strlen(pcKey) + 1);
+    newKey = (char *) malloc(sizeof(char) * (strlen(pcKey) + 1));
     if(newKey == NULL){
       free(end);
       return 0;
@@ -89,7 +89,7 @@ int SymTable_put(SymTable_T oSymTable,
 
 
     if(current == NULL){
-    current = end;
+    oSymTable->buckets[index] = end;
     oSymTable->size += 1;
     return 1;
     }
@@ -106,6 +106,7 @@ int SymTable_put(SymTable_T oSymTable,
     && oSymTable->bucketsNum != 65521){
       oSymTable = SymTable_resize(oSymTable, oSymTable->bucketsNum);
     }
+
     return 1;
 }
 
