@@ -33,6 +33,8 @@ SymTable_T SymTable_new(void){
   table->bucketsNum = BUCKET_COUNT;
   return table;
 }
+
+static size_t SymTable_hash(const char *pcKey, size_t uBucketCount);
 /* do we also free the table itself?*/
 void SymTable_free(SymTable_T oSymTable){
   int i;
@@ -58,6 +60,8 @@ size_t SymTable_getLength(SymTable_T oSymTable){
   assert(oSymTable != NULL);
   return oSymTable->size;
 }
+
+static SymTable_T SymTable_resize(SymTable_T oSymTable, int size);
 
 int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
@@ -214,7 +218,7 @@ void SymTable_map(SymTable_T oSymTable,
     }
   }
 
-SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
+static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
   SymTable_T newTable;
   int i;
   assert(oSymTable != NULL && size != NULL);
