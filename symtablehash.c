@@ -1,4 +1,3 @@
-#include <stddef.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -123,7 +122,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
     while(current != NULL){
       if(strcmp(current->key, pcKey) == 0){
-        const void *temp = current->value;
+        void *temp = (void *) current->value;
         current->value = pvValue;
         return temp;
       }
@@ -175,7 +174,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     if(current == NULL) return NULL;
 
     if(strcmp(current->key, pcKey) == 0){
-      const void *val = current->value;
+      void *val = (void *) current->value;
       struct Binding *after = current->next;
       oSymTable->buckets[index] = after;
       free(current->key);

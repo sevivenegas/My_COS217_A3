@@ -2,28 +2,36 @@
 /* symtablelist.c                                                     */
 /* Author: Sevastian Venegas                                          */
 /*--------------------------------------------------------------------*/
-
-#include <stddef.h>
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 #include "symtable.h"
 
+/* A Node is a pair of key and value which is setup to be a linked list
+with Node *next pointing to following Node*/
 struct Node {
- char *key;
- const void *value;
- struct Node *next;
+  /*key used to identify Node*/
+  char *key;
+  /*value of Node*/
+  const void *value;
+  /*pointer pointing to next node in linked list*/
+  struct Node *next;
 };
 
+/*A SymTable is series key value pairs in Nodes represented as a 
+linked list*/
 struct SymTable{
-   struct Node *first;
-   size_t size;
+  /*first points to first Node in linked list*/
+  struct Node *first;
+  /*size is number of key value pairs or Nodes*/
+  size_t size;
 };
 
 SymTable_T SymTable_new(void){
   SymTable_T table;
   table = (SymTable_T) malloc(sizeof(struct SymTable));
   if(table == NULL) return NULL;
+  /*sets table to an empty symtable*/
   table->first = NULL;
   table->size = 0;
   return table;
@@ -60,7 +68,21 @@ int SymTable_put(SymTable_T oSymTable,
   struct Node *end;
   char *newKey;
 
-  assert(oSymTable != NULL && pcKey != NULL);
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
+
+  current = oSymTable->first;
+  if(current != NULL) {
+    /*updates current until we are at the last node and 
+    checks if there is duplicate key*/
+    while(current->next != NULL){
+      if(strcmp(current->key, pcKey) == 0) return 0;
+      current = current->next;
+    }
+    /*special case where table only has one binding and
+    there is an attempt to add binding with same key*/
+    if(strcmp(current->key, pcKey) == 0) return 0;
+  }
 
   /*creates a new node end which will be potentially 
   added to end of linked list*/
@@ -76,25 +98,6 @@ int SymTable_put(SymTable_T oSymTable,
   end->key = newKey;
   end->value = pvValue;
   end->next = NULL;
-
-  current = oSymTable->first;
-
-  /*if linked list is empty add end to be first node*/
-  if(current == NULL){
-    oSymTable->first = end;
-    oSymTable->size += 1;
-    return 1;
-  }
-
-  /*updates current until we are at the last node and 
-  checks if there is duplicate key*/
-  while(current->next != NULL){
-    if(strcmp(current->key, pcKey) == 0) return 0;
-    current = current->next;
-  }
-  /*special case where table only has one binding and
-  there is an attempt to add binding with same key*/
-  if(strcmp(current->key, pcKey) == 0) return 0;
 
   /*adds end node to end of linked list*/
   current->next = end;

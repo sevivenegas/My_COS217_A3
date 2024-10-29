@@ -3,11 +3,10 @@
 /* Author: Sevastian Venegas                                          */
 /*--------------------------------------------------------------------*/
 
-#include <stddef.h>
-
-
 #ifndef SYMTABLE_H
 #define SYMTABLE_H
+
+#include <stddef.h>
 
 typedef struct SymTable* SymTable_T;
 
