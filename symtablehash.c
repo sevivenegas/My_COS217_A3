@@ -13,7 +13,7 @@ enum { BUCKET_COUNT = 509 };
 
 /*A Binding is a pair of key and value which is setup to be a linked 
 list (within a bucket of SymTable) with Binding *next pointing to 
-following Node*/
+following Binding*/
 struct Binding {
   /*key used to identify Binding*/
   char *key;
@@ -74,10 +74,10 @@ void SymTable_free(SymTable_T oSymTable){
     if(current != NULL){
       struct Binding *pointer = current;
       while(pointer != NULL){
-        /* temp is temporary only used to free node*/
+        /* temp is temporary only used to free Binding*/
         struct Binding *temp = pointer;
         pointer = pointer->next;
-        /*frees key and node, values untouched*/
+        /*frees key and Binding, values untouched*/
         free(temp->key);
         free(temp);
       }
@@ -106,7 +106,7 @@ int SymTable_put(SymTable_T oSymTable,
     current = oSymTable->buckets[index];
 
     if(current != NULL) {
-      /*updates current until we are at the last node and 
+      /*updates current until we are at the last Binding and 
       checks if there is duplicate key*/
       while(current->next != NULL){
         if(strcmp(current->key, pcKey) == 0) return 0;
@@ -117,7 +117,7 @@ int SymTable_put(SymTable_T oSymTable,
       if(strcmp(current->key, pcKey) == 0) return 0;
     }
 
-    /*creates a new node end which will be potentially 
+    /*creates a new Binding end which will be potentially 
     added to end of linked list*/
     end = (struct Binding *) malloc(sizeof(struct Binding));
     if(end == NULL) return 0;
@@ -127,15 +127,15 @@ int SymTable_put(SymTable_T oSymTable,
       free(end);
       return 0;
     } 
-    /*assigns values of Node end*/
+    /*assigns values of Binding end*/
     strcpy(newKey, pcKey);
     end->key = newKey;
     end->value = pvValue;
     end->next = NULL;
 
-    /*adds end as first node if list is currently empty*/
+    /*adds end as first Binding if list is currently empty*/
     if(current == NULL) oSymTable->buckets[index] = end;
-    /*adds end node to end of linked list*/
+    /*adds end Binding to end of linked list*/
     else current->next = end;
     oSymTable->size += 1;
     
@@ -151,10 +151,12 @@ int SymTable_put(SymTable_T oSymTable,
 
 void *SymTable_replace(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
+
     size_t index;
     struct Binding *current;
 
-    assert(oSymTable != NULL && pcKey != NULL);
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
 
     index = SymTable_hash(pcKey, oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
@@ -170,11 +172,13 @@ void *SymTable_replace(SymTable_T oSymTable,
     return NULL;
 }
 
-/*same thing apply hashfunction*/
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
+
   size_t index;
   struct Binding *current;
+
   assert(oSymTable != NULL && pcKey != NULL);
+
   index = SymTable_hash(pcKey, oSymTable->bucketsNum);
   current = oSymTable->buckets[index];
 
@@ -185,11 +189,14 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   return 0;
 }
 
-/*apply hash function*/
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
+
   size_t index;
   struct Binding *current;
-  assert(oSymTable != NULL && pcKey != NULL);
+
+  assert(oSymTable != NULL);
+  assert(pcKey != NULL);
+
   index = SymTable_hash(pcKey, oSymTable->bucketsNum);
   current = oSymTable->buckets[index];
 
@@ -200,21 +207,26 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
   return NULL;
 }
 
-/*update to use hashfunction*/
 void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
+
     size_t index;
     struct Binding *current;
     struct Binding *before;
 
-    assert(oSymTable != NULL && pcKey != NULL);
+    assert(oSymTable != NULL);
+    assert(pcKey != NULL);
+
     index = SymTable_hash(pcKey, oSymTable->bucketsNum);
     current = oSymTable->buckets[index];
 
+    /*empty table nothing to remove*/
     if(current == NULL) return NULL;
 
+    /*if the starting Binding needs to be removed*/
     if(strcmp(current->key, pcKey) == 0){
       void *val = (void *) current->value;
       struct Binding *after = current->next;
+      /*updates starting Binding*/
       oSymTable->buckets[index] = after;
       free(current->key);
       free(current);
@@ -222,18 +234,22 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
       return val;
     }
 
+    /*before keeps track of previous Binding to update pointer next
+    when current is removed*/
     before = current;
     current = current->next;
 
     while(current != NULL){
       if(strcmp(current->key, pcKey) == 0){
-        void *val = (void *) current->value;
+        /*connects Bindings after removal*/
+        void *Oldval = (void *) current->value;
         struct Binding *after = current->next;
         before->next = after;
+        /*frees key and Binding, values untouched*/
         free(current->key);
         free(current);
         oSymTable->size -= 1;
-        return val;
+        return Oldval;
       }
       before = current;
       current = current->next;
@@ -245,7 +261,9 @@ void SymTable_map(SymTable_T oSymTable,
   void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
   const void *pvExtra){
     int i;
-    assert(oSymTable != NULL && pfApply != NULL);
+
+    assert(oSymTable != NULL); 
+    assert(pfApply != NULL);
 
     for(i = 0; i < oSymTable->bucketsNum; i++){
       struct Binding *current = oSymTable->buckets[i];
@@ -262,12 +280,15 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   SymTable_T newTable;
   int i;
   int size;
+
   assert(oSymTable != NULL);
   size = oSymTable->bucketsNum;
 
   newTable = (SymTable_T) malloc(sizeof(struct SymTable));
   if(newTable == NULL) return oSymTable;
 
+  /*determines size of newTable based on sizes and conditions given
+  in assignments*/
   if (size == 509) size = 1021;
   else if(size == 1021) size = 2039;
   else if (size == 2039) size = 4093;
@@ -279,6 +300,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding));
   if(newTable->buckets == NULL) return oSymTable;
 
+  /*re-adds all bindings from previous table into new table*/
   for(i = 0; i < oSymTable->bucketsNum; i++){
     struct Binding *current = oSymTable->buckets[i];
     if(current != NULL){
@@ -287,12 +309,13 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
       }
     }
   }
+  /*completely frees all memory associated with old table*/
   SymTable_free(oSymTable);
   return newTable;
 }
 
 /* Return a hash code for pcKey that is between 0 and uBucketCount-1,
-   inclusive. */
+inclusive. */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 {
    const size_t HASH_MULTIPLIER = 65599;

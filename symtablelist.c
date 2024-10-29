@@ -127,7 +127,6 @@ void *SymTable_replace(SymTable_T oSymTable,
     current = current->next;
   }
   return NULL;
-
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
@@ -149,6 +148,7 @@ void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
 
   assert(oSymTable != NULL);
   assert(pcKey != NULL);
+  
   current = oSymTable->first;
 
   while(current != NULL){
@@ -190,7 +190,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
   while(current != NULL){
     if(strcmp(current->key, pcKey) == 0){
       /*connects nodes after removal*/
-      void *val = (void *) current->value;
+      void *Oldval = (void *) current->value;
       struct Node *after = current->next;
       before->next = after;
       oSymTable->size -= 1;
@@ -198,7 +198,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
       /*frees key and node, values untouched*/
       free(current->key);
       free(current);
-      return val;
+      return Oldval;
     }
     before = current;
     current = current->next;
