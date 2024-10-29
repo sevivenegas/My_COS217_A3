@@ -8,7 +8,7 @@ enum { BUCKET_COUNT = 509 };
 
 struct Binding {
  char *key;
- void *value;
+ const void *value;
  struct Binding *next;
 };
 
@@ -101,7 +101,7 @@ int SymTable_put(SymTable_T oSymTable,
     oSymTable->size += 1;
     
     /*add resize function*/
-    if(oSymTable->size > oSymTable->bucketsNum 
+    if(oSymTable->size > (size_t) oSymTable->bucketsNum 
     && oSymTable->bucketsNum != 65521){
       oSymTable = SymTable_resize(oSymTable, oSymTable->bucketsNum);
     }
