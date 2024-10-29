@@ -306,6 +306,9 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     return NULL;
   } 
 
+  newTable->bucketsNum = size;
+  newTable->size = 0;
+
   /*re-adds all bindings from previous table into new table*/
   for(i = 0; i < oSymTable->bucketsNum; i++){
     struct Binding *current = oSymTable->buckets[i];
