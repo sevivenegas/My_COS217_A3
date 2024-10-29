@@ -53,7 +53,7 @@ SymTable_T SymTable_new(void){
 
   /*only allocates memory for array of pointers not for actual bindings.
   This will be done as we put Bindings*/
-  table->buckets = calloc(BUCKET_COUNT, sizeof(struct Binding));
+  table->buckets = calloc(BUCKET_COUNT, sizeof(struct Binding *));
   if(table->buckets == NULL){
     free(table);
     return NULL;
@@ -144,10 +144,7 @@ int SymTable_put(SymTable_T oSymTable,
     if((oSymTable->size > (size_t) oSymTable->bucketsNum)
     && (oSymTable->bucketsNum != 65521)){
       SymTable_T temp = SymTable_resize(oSymTable);
-      if(temp != NULL){
-        SymTable_free(oSymTable);
-        oSymTable = temp;
-      }
+      if(temp != NULL) oSymTable = temp;
     }
 
     return 1;
@@ -302,7 +299,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   else if (size == 16381) size = 32749;
   else size = 65521;
 
-  newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding));
+  newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding *));
   if(newTable->buckets == NULL) return NULL;
 
   /*re-adds all bindings from previous table into new table*/
@@ -316,6 +313,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     }
   }
   /*completely frees all memory associated with old table*/
+  SymTable_free(oSymTable);
   return newTable;
 }
 
