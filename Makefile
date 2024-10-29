@@ -21,7 +21,7 @@ symtablelist.s: symtablelist.i
 symtablehash.s: symtablehash.i
 	gcc217 -S symtablehash.i
 
-testsymtable.c: testsymtable.i
+testsymtable.s: testsymtable.i
 	gcc217 -S testsymtable.i
 
 symtablelist.i: symtablelist.c symtablelist.i
