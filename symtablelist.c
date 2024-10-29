@@ -95,13 +95,15 @@ int SymTable_put(SymTable_T oSymTable,
     free(end);
     return 0;
   }
+  /*assigns values of Node end*/
   strcpy(newKey, pcKey);
   end->key = newKey;
   end->value = pvValue;
   end->next = NULL;
 
-  /*adds end node to end of linked list*/
+  /*adds end as first node if list is currently empty*/
   if(current == NULL) oSymTable->first = end;
+  /*adds end node to end of linked list*/
   else current->next = end;
   oSymTable->size += 1;
   return 1;
@@ -163,9 +165,11 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
   /*empty table nothing to remove*/
   if(current == NULL) return NULL;
 
+  /*if the starting node needs to be removed*/
   if(strcmp(current->key, pcKey) == 0){
     void *val = (void *) current->value;
     struct Node *after = current->next;
+    /*updates starting node*/
     oSymTable->first = after;
     free(current->key);
     free(current);
@@ -173,17 +177,20 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     return val;
   }
 
+  /*before keeps track of previous Node to update pointer next
+  when current is removed*/
   before = current;
   current = current->next;
 
   while(current != NULL){
     if(strcmp(current->key, pcKey) == 0){
+      /*connects nodes after removal*/
       void *val = (void *) current->value;
       struct Node *after = current->next;
       before->next = after;
       oSymTable->size -= 1;
 
-       /*frees key and node, values untouched*/
+      /*frees key and node, values untouched*/
       free(current->key);
       free(current);
       return val;
