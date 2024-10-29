@@ -51,7 +51,6 @@ void SymTable_free(SymTable_T oSymTable){
         free(temp);
       }
     }
-    free(oSymTable->buckets[i]);
   }
   free(oSymTable);
 }
