@@ -86,7 +86,7 @@ int SymTable_put(SymTable_T oSymTable,
 
 void *SymTable_replace(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
-
+  return NULL; /* erase */
   struct Node *point;
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
@@ -171,9 +171,10 @@ void SymTable_map(SymTable_T oSymTable,
   void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
   const void *pvExtra){
 
-  struct Node *point = oSymTable->first;
+  struct Node *point;
 
   assert(oSymTable != NULL && pvExtra != NULL && pfApply != NULL);
+  point = oSymTable->first;
 
   while(point != NULL){
     (*pfApply)(point->key, point->value, pvExtra);
