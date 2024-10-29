@@ -15,10 +15,10 @@ symtablehash.o: symtablehash.s symtable.h
 testsymtable.o: testsymtable.s symtable.h
 	gcc217 -c testsymtable.s
 
-symtablelist.c: symtablelist.i
+symtablelist.s: symtablelist.i
 	gcc217 -S symtablelist.i
 
-symtablehash.c: symtablehash.i
+symtablehash.s: symtablehash.i
 	gcc217 -S symtablehash.i
 
 testsymtable.c: testsymtable.i
