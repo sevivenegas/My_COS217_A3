@@ -35,9 +35,10 @@ SymTable_T SymTable_new(void){
 }
 /* do we also free the table itself?*/
 void SymTable_free(SymTable_T oSymTable){
+  int i;
   assert(oSymTable != NULL);
 
-  for(int i = 0; i < oSymTable->bucketsNum; i++){
+  for(i = 0; i < oSymTable->bucketsNum; i++){
     struct Binding *current = oSymTable->buckets[i];
     if(current != NULL){
       struct Binding *pointer = current;
@@ -199,9 +200,10 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
 void SymTable_map(SymTable_T oSymTable,
   void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
   const void *pvExtra){
+    int i;
     assert(oSymTable != NULL && pfApply != NULL);
 
-    for(int i = 0; i < oSymTable->bucketsNum; i++){
+    for(i = 0; i < oSymTable->bucketsNum; i++){
       struct Binding *current = oSymTable->buckets[i];
       if(current != NULL){
         while(current != NULL){
@@ -214,7 +216,7 @@ void SymTable_map(SymTable_T oSymTable,
 
 static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
   SymTable_T newTable;
-
+  int i;
   assert(oSymTable != NULL && size != NULL);
 
   newTable = (SymTable_T) malloc(sizeof(struct SymTable));
@@ -231,7 +233,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
   newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding));
   if(newTable->buckets == NULL) return oSymTable;
 
-  for(int i = 0; i < oSymTable->bucketsNum; i++){
+  for(i = 0; i < oSymTable->bucketsNum; i++){
     struct Binding *current = oSymTable->buckets[i];
     if(current != NULL){
       while(current != NULL){
