@@ -307,6 +307,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     if(current != NULL){
       while(current != NULL){
         SymTable_put(newTable, current->key, current->value);
+        current = current->next;
       }
     }
   }
