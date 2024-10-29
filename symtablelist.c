@@ -174,7 +174,7 @@ void SymTable_map(SymTable_T oSymTable,
 
   struct Node *point;
 
-  assert(oSymTable != NULL && pvExtra != NULL && pfApply != NULL);
+  assert(oSymTable != NULL && pfApply != NULL);
   point = oSymTable->first;
 
   while(point != NULL){
