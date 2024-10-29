@@ -4,15 +4,17 @@
 #include <string.h>
 #include "symtable.h"
 
+/*should i put comment here*/
 enum { BUCKET_COUNT = 509 };
 
+/*should i put comment here*/
 struct Binding {
  char *key;
  const void *value;
  struct Binding *next;
 };
 
-/*should i make size size_t*/
+/*should i put comment*/
 struct SymTable {
  size_t size;
  int bucketsNum;
@@ -221,7 +223,7 @@ void SymTable_map(SymTable_T oSymTable,
 static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
   SymTable_T newTable;
   int i;
-  assert(oSymTable != NULL && size != NULL);
+  assert(oSymTable != NULL);
 
   newTable = (SymTable_T) malloc(sizeof(struct SymTable));
   if(newTable == NULL) return oSymTable;

@@ -1,3 +1,8 @@
+/*--------------------------------------------------------------------*/
+/* symtablelist.c                                                     */
+/* Author: Sevastian Venegas                                          */
+/*--------------------------------------------------------------------*/
+
 #include <stddef.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -25,16 +30,20 @@ SymTable_T SymTable_new(void){
 }
 
 void SymTable_free(SymTable_T oSymTable){
-  struct Node *point;
+
+  struct Node *current;
 
   assert(oSymTable != NULL);
-  point = oSymTable->first;
+  current = oSymTable->first;
 
-  while(point != NULL){
-    struct Node *current = point;
-    point = point->next;
-    free(current->key);
-    free(current);
+  while(current != NULL){
+    /* temp is temporary only used to free node*/
+    struct Node *temp = current;
+    current = current->next;
+
+    /*frees key and node, values untouched*/
+    free(temp->key);
+    free(temp);
   }
   free(oSymTable);
 }
@@ -44,7 +53,6 @@ size_t SymTable_getLength(SymTable_T oSymTable){
   return oSymTable->size;
 }
 
-/*shouldnt assert come first before declarations?*/
 int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
 
@@ -54,14 +62,16 @@ int SymTable_put(SymTable_T oSymTable,
 
   assert(oSymTable != NULL && pcKey != NULL);
 
+  /*creates a new node end which will be potentially 
+  added to end of linked list*/
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
+  /*defensive copy of key*/
   newKey = (char *) malloc(sizeof(char) * (strlen(pcKey) + 1));
   if(newKey == NULL){
     free(end);
     return 0;
   }
-  
   strcpy(newKey, pcKey);
   end->key = newKey;
   end->value = pvValue;
@@ -69,64 +79,71 @@ int SymTable_put(SymTable_T oSymTable,
 
   current = oSymTable->first;
 
+  /*if linked list is empty add end to be first node*/
   if(current == NULL){
     oSymTable->first = end;
     oSymTable->size += 1;
     return 1;
   }
+
+  /*updates current until we are at the last node and 
+  checks if there is duplicate key*/
   while(current->next != NULL){
     if(strcmp(current->key, pcKey) == 0) return 0;
     current = current->next;
   }
+  /*special case where table only has one binding and
+  there is an attempt to add binding with same key*/
   if(strcmp(current->key, pcKey) == 0) return 0;
+
+  /*adds end node to end of linked list*/
   current->next = end;
   oSymTable->size += 1;
-  /*do i free the old key?*/
   return 1;
 }
 
 void *SymTable_replace(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
   
-  struct Node *point;
+  struct Node *current;
 
   assert(oSymTable != NULL && pcKey != NULL);
-  point = oSymTable->first;
+  current = oSymTable->first;
 
-  while(point != NULL){
-    if(strcmp(point->key, pcKey) == 0){
-      const void *old = point->value;
-      point->value = pvValue;
-      return old;
+  while(current != NULL){
+    if(strcmp(current->key, pcKey) == 0){
+      const void *oldValue = current->value;
+      current->value = pvValue;
+      return oldValue;
     } 
-    point = point->next;
+    current = current->next;
   }
   return NULL;
 
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
-  struct Node *point;
+  struct Node *current;
 
   assert(oSymTable != NULL && pcKey != NULL);
-  point = oSymTable->first;
+  current = oSymTable->first;
 
-  while(point != NULL){
-    if(strcmp(point->key, pcKey) == 0) return 1;
-    point = point->next;
+  while(current != NULL){
+    if(strcmp(current->key, pcKey) == 0) return 1;
+    current = current->next;
   }
   return 0;
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
-  struct Node *point;
+  struct Node *current;
 
   assert(oSymTable != NULL && pcKey != NULL);
-  point = oSymTable->first;
+  current = oSymTable->first;
 
-  while(point != NULL){
-    if(strcmp(point->key, pcKey) == 0) return point->value;
-    point = point->next;
+  while(current != NULL){
+    if(strcmp(current->key, pcKey) == 0) return current->value;
+    current = current->next;
   }
   return NULL;
 }
@@ -138,6 +155,7 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
   assert(oSymTable != NULL && pcKey != NULL);
   current = oSymTable->first;
 
+  /*empty table nothing to remove*/
   if(current == NULL) return NULL;
 
   if(strcmp(current->key, pcKey) == 0){
@@ -158,9 +176,11 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
       const void *val = current->value;
       struct Node *after = current->next;
       before->next = after;
+      oSymTable->size -= 1;
+
+       /*frees key and node, values untouched*/
       free(current->key);
       free(current);
-      oSymTable->size -= 1;
       return val;
     }
     before = current;
@@ -174,14 +194,14 @@ void SymTable_map(SymTable_T oSymTable,
   void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
   const void *pvExtra){
 
-  struct Node *point;
+  struct Node *current;
 
   assert(oSymTable != NULL && pfApply != NULL);
-  point = oSymTable->first;
+  current = oSymTable->first;
 
-  while(point != NULL){
-    (*pfApply)(point->key, point->value, pvExtra);
-    point = point->next;
+  while(current != NULL){
+    (*pfApply)(current->key, current->value, pvExtra);
+    current = current->next;
   }
   
 }
