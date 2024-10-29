@@ -47,13 +47,14 @@ size_t SymTable_getLength(SymTable_T oSymTable){
 int SymTable_put(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
 
-  struct Node *point;
+  struct Node *current;
+  struct Node *after;
   struct Node *end;
   char *newKey;
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
 
-  point = oSymTable->first;
+  current = oSymTable->first;
 
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
@@ -68,21 +69,24 @@ int SymTable_put(SymTable_T oSymTable,
   end->value = pvValue;
   end->next = NULL;
 
-  if(point == NULL) point = end;
-
-  while(point->next != NULL){
-    if(strcmp(point->key, pcKey) == 0) return 0;
-    if(point->next == NULL){
-      point->next = end;
+  if(current == NULL){
+    oSymTable->first = end;
+    oSymTable->size += 1;
+    return 1;
+  } 
+  after = current->next;
+  while(current != NULL){
+    if(strcmp(current->key, pcKey) == 0) return 0;
+    if(after == NULL){
+      after = end;
       oSymTable->size += 1;
       return 1;
     }
-    point = point->next;
+    current = after;
+    after = current->next;
   }
   /*do i free the old key?*/
-  oSymTable->first = end;
-  oSymTable->size += 1;
-  return 1;
+  return 0;
 }
 
 void *SymTable_replace(SymTable_T oSymTable,
