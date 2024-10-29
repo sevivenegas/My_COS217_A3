@@ -88,9 +88,10 @@ int SymTable_put(SymTable_T oSymTable,
 void *SymTable_replace(SymTable_T oSymTable,
   const char *pcKey, const void *pvValue){
 
-  struct Node *point = oSymTable->first;
+  struct Node *point;
 
   assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
+  point = oSymTable->first;
 
   while(point != NULL){
     if(strcmp(point->key, pcKey) == 0){
@@ -105,9 +106,10 @@ void *SymTable_replace(SymTable_T oSymTable,
 }
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
-  struct Node *point = oSymTable->first;
+  struct Node *point;
 
   assert(oSymTable != NULL && pcKey != NULL);
+  point = oSymTable->first;
 
   while(point != NULL){
     if(strcmp(point->key, pcKey) == 0) return 1;
@@ -117,9 +119,10 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
 }
 
 void *SymTable_get(SymTable_T oSymTable, const char *pcKey){
-  struct Node *point = oSymTable->first;
+  struct Node *point;
 
   assert(oSymTable != NULL && pcKey != NULL);
+  point = oSymTable->first;
 
   while(point != NULL){
     if(strcmp(point->key, pcKey) == 0) return point->value;
@@ -140,9 +143,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
   if(strcmp(current->key, pcKey) == 0){
     const void *val = current->value;
     struct Node *after = current->next;
+    oSymTable->first = after;
     free(current->key);
     free(current);
-    oSymTable->first = after;
     return val;
   }
 
@@ -153,9 +156,9 @@ void *SymTable_remove(SymTable_T oSymTable, const char *pcKey){
     if(strcmp(current->key, pcKey) == 0){
       const void *val = current->value;
       struct Node *after = current->next;
+      before->next = after;
       free(current->key);
       free(current);
-      before->next = after;
       return val;
     }
     before = current;
