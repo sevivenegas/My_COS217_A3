@@ -212,7 +212,7 @@ void SymTable_map(SymTable_T oSymTable,
       struct Binding *current = oSymTable->buckets[i];
       if(current != NULL){
         while(current != NULL){
-          (*pfApply)(current->key, current->value, pvExtra);
+          (*pfApply)(current->key, (void *) current->value, (void *) pvExtra);
           current = current->next;
         }
       }
@@ -242,7 +242,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable, int size){
     struct Binding *current = oSymTable->buckets[i];
     if(current != NULL){
       while(current != NULL){
-        SymTable_put(newTable, (void *) current->key, (void *) current->value);
+        SymTable_put(newTable, current->key, current->value);
       }
     }
   }
