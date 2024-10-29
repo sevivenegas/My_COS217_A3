@@ -25,9 +25,10 @@ SymTable_T SymTable_new(void){
 }
 
 void SymTable_free(SymTable_T oSymTable){
-  struct Node *point = oSymTable->first;
+  struct Node *point;
 
   assert(oSymTable != NULL);
+  point = oSymTable->first;
 
   while(point != NULL){
     struct Node *current = point;
@@ -51,7 +52,7 @@ int SymTable_put(SymTable_T oSymTable,
   struct Node *end;
   char *newKey;
 
-  assert(oSymTable != NULL && pcKey != NULL && pvValue != NULL);
+  assert(oSymTable != NULL && pcKey != NULL);
 
   end = (struct Node *) malloc(sizeof(struct Node));
   if(end == NULL) return 0;
@@ -106,7 +107,7 @@ void *SymTable_replace(SymTable_T oSymTable,
 
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey){
   struct Node *point;
-  return NULL; /* erase */
+
   assert(oSymTable != NULL && pcKey != NULL);
   point = oSymTable->first;
 
