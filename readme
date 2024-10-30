@@ -95,7 +95,76 @@ disagreements with them? Copy the critTer warnings here, and express
 your disagreement after each warning. If there are no warnings, then
 write "None."
 
+symtablehash.c: line 292: high priority: 
+A static function definition should have a comment
 
+symtablehash.c: line 340: high priority: 
+A static function definition should have a comment
+
+Both these functions have a comment but on top of their delaration at 
+top of file (recommended by precepter).
+
+symtablehash.c: line 103: medium priority:
+Do you want to validate 'pvValue' through an assert?
+
+symtablehash.c: line 165: medium priority:
+Do you want to validate 'pvValue' through an assert?
+
+symtablehash.c: line 275: medium priority:
+Do you want to validate 'pvExtra' through an assert?
+
+These warning are all for the same reason; however they priortize style
+over functionality as NULL is a valid value for them demonstrated by 
+the test cases. Adding assert would cause unneseccary errors.
+
+symtablehash.c: line 292: low priority: 
+This function definition probably needs more local comments
+
+symtablehash.c: line 152: high priority: 
+Use of magic number (65521), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (509), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (1021), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (1021), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (2039), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (2039), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (4093), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (4093), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (8191), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (8191), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (16381), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (16381), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (32749), which should be given a meaningful name
+
+symtablehash.c: line 311: high priority: 
+Use of magic number (65521), which should be given a meaningful name
+
+These 'magic numbers' do not inhibit the program and the implmentation
+is simple. The assignment and precepter also said magic numbers are likely
+fine.
 
 ------------------------------------------------------------------------
 What are the CPU times reported by testsymtable.c with binding counts
