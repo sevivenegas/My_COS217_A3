@@ -63,8 +63,7 @@ SymTable_T SymTable_new(void){
   return table;
 }
 
-void SymTable_free(SymTable_T oSymTable){
-
+static void SymTable_freeInside(SymTable_T oSymTable){
   int i;
 
   assert(oSymTable != NULL);
@@ -85,6 +84,11 @@ void SymTable_free(SymTable_T oSymTable){
   }
   /*frees all pointers and table*/
   free(oSymTable->buckets);
+}
+
+void SymTable_free(SymTable_T oSymTable){
+  assert(oSymTable != NULL);
+  SymTable_freeInside(oSymTable);
   free(oSymTable);
 }
 
@@ -320,7 +324,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     }
   }
   /*completely frees all memory associated with old table*/
-  SymTable_free(oSymTable);
+  SymTable_freeInside(oSymTable);
   return newTable;
 }
 
