@@ -149,8 +149,10 @@ int SymTable_put(SymTable_T oSymTable,
     if((oSymTable->size > (size_t) oSymTable->bucketsNum)
     && (oSymTable->bucketsNum != 65521)){
       SymTable_T temp = SymTable_resize(oSymTable);
-      if(temp != NULL) *oSymTable = *temp;
-      SymTable_free(temp);
+      if(temp != NULL){
+        *oSymTable = *temp;
+        SymTable_free(temp);
+      } 
     }
 
     return 1;
