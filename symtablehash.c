@@ -316,7 +316,7 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
     free(newTable);
     return NULL;
   } 
-
+  /*assigns rest of values of newTable*/
   newTable->bucketsNum = size;
   newTable->size = 0;
 
@@ -336,8 +336,6 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   return newTable;
 }
 
-/* Return a hash code for pcKey that is between 0 and uBucketCount-1,
-inclusive. */
 static size_t SymTable_hash(const char *pcKey, size_t uBucketCount)
 {
    const size_t HASH_MULTIPLIER = 65599;
