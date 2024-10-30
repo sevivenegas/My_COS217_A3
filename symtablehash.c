@@ -63,6 +63,7 @@ SymTable_T SymTable_new(void){
   return table;
 }
 
+/*frees all memory of oSymTable, except the structure itself*/
 static void SymTable_freeInside(SymTable_T oSymTable){
   int i;
 
@@ -88,6 +89,7 @@ static void SymTable_freeInside(SymTable_T oSymTable){
 
 void SymTable_free(SymTable_T oSymTable){
   assert(oSymTable != NULL);
+  /*calls other function which frees inside and then frees struc*/
   SymTable_freeInside(oSymTable);
   free(oSymTable);
 }
@@ -150,6 +152,7 @@ int SymTable_put(SymTable_T oSymTable,
     && (oSymTable->bucketsNum != 65521)){
       SymTable_T temp = SymTable_resize(oSymTable);
       if(temp != NULL){
+        /*must dereferrence to change actual inside values*/
         *oSymTable = *temp;
         free(temp);
       } 
@@ -307,7 +310,8 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
   else if (size == 16381) size = 32749;
   else size = 65521;
 
-  newTable->buckets = (struct Binding **) calloc(size, sizeof(struct Binding *));
+  /* allocates memory for array of pointers based on the new number of buckets*/
+  newTable->buckets = (struct Binding **) calloc((size_t) size, sizeof(struct Binding *));
   if(newTable->buckets == NULL){
     free(newTable);
     return NULL;
@@ -326,7 +330,8 @@ static SymTable_T SymTable_resize(SymTable_T oSymTable){
       }
     }
   }
-  /*completely frees all memory associated with old table*/
+  /*completely frees all memory associated inside old table but not
+  table itself*/
   SymTable_freeInside(oSymTable);
   return newTable;
 }
