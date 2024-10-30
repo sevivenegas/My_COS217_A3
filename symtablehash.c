@@ -151,6 +151,7 @@ int SymTable_put(SymTable_T oSymTable,
       SymTable_T temp = SymTable_resize(oSymTable);
       if(temp != NULL){
         *oSymTable = *temp;
+        free(temp);
       } 
     }
 
